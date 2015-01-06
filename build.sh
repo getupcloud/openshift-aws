@@ -73,5 +73,6 @@ build_s3_cartridges
 commit
 
 if [ "$1" == '--rpm' ]; then
-	./build-rpm.sh
+	shift
+	./build-rpm.sh $@
 fi

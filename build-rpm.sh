@@ -4,14 +4,12 @@ set -eu
 
 branch=master
 rpm_dir=~/openshift-aws-rpms/$branch
-update_repo=1
 build=1
 publish=0
 while [ $# -gt 0 ]; do
 	case "$1" in
-		--no-update-repo) update_repo=0;;
 		--no-build) build=0;;
-		--no-publish) publish=0;;
+		--publish) publish=1;;
 		--branch) shift; branch="$1";;
 		*) echo "invalid param: $1"
 		   echo "use: $0 [--no-build] [--no-publish] [--branch BRANCH]"
@@ -42,10 +40,6 @@ if [ $build -eq 1 ]; then
 	rm -rf /tmp/tito
 	mkdir -p /tmp/tito
 
-	if [ $update_repo -eq 1 ]; then
-		git checkout "$branch"
-		git pull origin "$branch"
-	fi
 	_build build/openshift-aws-account
 	_build build/openshift-aws-s3-sa-east-1
 	_build build/openshift-aws-s3-us-west-2
@@ -55,9 +49,6 @@ if [ $build -eq 1 ]; then
 fi
 
 if [ $publish -eq 1 ]; then
-	if [ -z "$AWS_ACCESS_KEY_ID" -o -z "$AWS_SECRET_ACCESS_KEY" ]; then
-	fi
-
 	cd ${rpm_dir}
 	createrepo .
 
