@@ -3,7 +3,7 @@
 Summary:       Provides AWS account support to applications
 Name:          openshift-origin-cartridge-aws-account
 Version:       0.0.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
 URL:           http://www.openshift.com
