@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# In:  $VAR_NAME
+# Out: "OPENSHIFT_AWS_${SERVICE}_[${REGION}_]VAR_NAME"
+function var_name()
+{
+    local suffix="${AWS_SERVICE}${AWS_REGION:+_${AWS_REGION}}_${1}"
+    suffix="${suffix//[-.]/_}" # replace -. for _
+    suffix="${suffix^^}"       # uppercase
+    echo -n "OPENSHIFT_AWS_${suffix}"
+}
+
+# In:  $VAR_NAME
+# Out: Value of $OPENSHIFT_AWS_${SERVICE}_[${REGION}_]VAR_NAME"
+function var_value()
+{
+    eval echo -n "\${`var_name $1`}"
+}
+
+# In:  $VAR_NAME
+# Out: "OPENSHIFT_AWS_${SERVICE}_[${REGION}_]VAR_NAME=$OPENSHIFT_AWS_${SERVICE}_[${REGION}_]VAR_NAME"
+function var()
+{
+    echo -n `var_name $1`=`var_value $1`
+}

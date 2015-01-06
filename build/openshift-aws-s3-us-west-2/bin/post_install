@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+source lib/util
+source config/aws.conf
+
+BUCKET_NAME="`var_value BUCKET_NAME`"
+REGION="`var_value REGION`"
+ENDPOINT="`var_value ENDPOINT`"
+
+client_result "Dados de acesso ao bucket S3"
+client_result "----------------------------"
+client_result ""
+client_result "Bucket Name: $BUCKET_NAME"
+client_result "     Region: $REGION"
+client_result "   Endpoint: $ENDPOINT"
+client_result ""
+client_result "ALERTA: SE VOCÊ REMOVER ESTE CARTUCHO, O BUCKET SERÁ DESTRUIDO."
+
+cart_props "bucket_name=$BUCKET_NAME"
+cart_props "region=$REGION"
+cart_props "endpoint=$ENDPOINT"

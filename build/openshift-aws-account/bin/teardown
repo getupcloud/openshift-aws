@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+source config/aws.conf
+source lib/util
+
+USERNAME="`var_value USERNAME`"
+if [ ${USERNAME} ]; then
+    lib/request delete $AWS_STORE_BASE_URL/iam/$USERNAME/ || true
+fi

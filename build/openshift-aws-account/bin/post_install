@@ -1,0 +1,28 @@
+#!/bin/bash -e
+
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+source config/aws.conf
+source lib/util
+
+USER_ID="`var_value USER_ID`"
+USERNAME="`var_value USERNAME`"
+ACCESS_KEY_ID="`var_value ACCESS_KEY_ID`"
+SECRET_ACCESS_KEY="`var_value SECRET_ACCESS_KEY`"
+
+client_result "Credenciais do usuario IAM"
+client_result "--------------------------"
+client_result ""
+client_result "          User ID: $USER_ID"
+client_result "         Username: $USERNAME"
+client_result "    Access Key ID: $ACCESS_KEY_ID"
+client_result "Secret Access Key: $SECRET_ACCESS_KEY"
+client_result ""
+client_result "ALERTA: SE VOCÊ REMOVER ESTE CARTUCHO, O USUÁRIO SERÁ DESTRUIDO."
+
+cart_props "user_id=$USER_ID"
+cart_props "username=$USERNAME"
+cart_props "access_key_id=$ACCESS_KEY_ID"
+cart_props "secret_access_key=$SECRET_ACCESS_KEY"
+
+set_env_var ACCESS_KEY_ID $ACCESS_KEY_ID env
+set_env_var SECRET_ACCESS_KEY $SECRET_ACCESS_KEY env

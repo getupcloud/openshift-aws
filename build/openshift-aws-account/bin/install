@@ -1,0 +1,7 @@
+#!/bin/bash -e
+
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+source config/aws.conf
+source lib/util
+
+lib/request post $AWS_STORE_BASE_URL/iam/ --env-dir=$PWD/env

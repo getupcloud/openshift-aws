@@ -1,0 +1,84 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+import argparse
+import requests
+import sys
+import os
+import hashlib
+import base64
+
+parser = argparse.ArgumentParser(description='HTTP request.')
+parser.add_argument('method', metavar='METHOD', nargs='?', help='HTTP method')
+parser.add_argument('url', metavar='URL', nargs='?', help='HTTP URL')
+parser.add_argument('--data', metavar='data', action='append', help='ASCII body data', default=None)
+parser.add_argument('--headers', metavar='headers', action='append', help='ASCII body data', default=None)
+parser.add_argument('--env-dir', metavar='env_dir', help='Where to create env vars', default='env/')
+args = parser.parse_args()
+
+try:
+	# Retrieve method
+	method = getattr(requests, args.method.lower())
+except AttributeError, ex:
+	print('Invalid method: {args.method}'.format(args=args), file=sys.stderr)
+	sys.exit(1)
+
+params = {}
+
+# form-encoded data only
+if args.data:
+	key = 'data' if method in [ 'post', 'put' ] else 'params'
+	params[key] = dict([d.split('=') for d in '&'.join(args.data).split('&') ])
+
+if args.headers:
+	params['headers'] = dict([ map(lambda x: x.strip(), h.split(':', 1)) for h in args.headers ])
+else:
+	params['headers'] = {}
+
+# Authorization header value:
+# Bearer base64(app-uuid:sha1(secret-token))
+secret_key_hash = hashlib.sha1(os.environ['OPENSHIFT_SECRET_TOKEN']).hexdigest()
+app_uuid        = os.environ['OPENSHIFT_APP_UUID']
+params['headers']['Authorization'] = 'Bearer %s' % base64.encodestring('%s:%s' % (app_uuid, secret_key_hash))[:-1].replace('\n','')
+
+# Issue request
+result = method(args.url, **params)
+
+if not result.ok:
+	try:
+		print('error: %s' % result.json()['message'], file=sys.stderr)
+	except:
+		print('error: %s %s' % (result.status_code, result.reason), file=sys.stderr)
+	sys.exit(1)
+
+if args.method == 'delete':
+	sys.exit(0)
+	
+try:
+	json = result.json()
+except TypeError:
+	json = result.json
+
+if json['status'] != 'ok':
+	print('error: %s' % json['message'], file=sys.stderr)
+	sys.exit(1)
+
+if args.method == 'get':
+	from json import dumps
+	print(dumps(json))
+	sys.exit(0)
+
+for data in json['data']:
+	if 'vars' in data:
+		for suffix, value in data['vars'].iteritems():
+			name = 'OPENSHIFT_AWS'
+			for v in [ 'AWS_SERVICE', 'AWS_REGION' ]:
+				if v in os.environ:
+					name = '%s_%s' % (name, os.environ[v])
+
+			name = '%s_%s' % (name, suffix)
+			for c in '-.!@#$%()[]{}/?\\|':
+					  name = name.replace(c, '_')
+			name = name.upper()
+			with open(os.path.join(args.env_dir, name), 'w') as env:
+				env.write(value)

@@ -1,0 +1,51 @@
+Name: aws-account
+Cartridge-Short-Name: AWS_ACCOUNT
+Display-Name: AWS Base
+Description: "Instale este cartucho para ter acesso aos servicos AWS providos por outros cartucho AWS.
+ Cada aplicacao recebe uma conta IAM separada, utilizada para autenticar servicos como S3 e RDS.
+ Voce recebera as credenciais de acesso em variaveis de ambiente dentro de sua aplicacao."
+Version: '0.1'
+Versions: [ '0.1' ]
+License: Apache License version 2.0
+License-Url: http://www.apache.org/licenses/LICENSE-2.0.html
+Vendor: The Apache Software Foundation
+Cartridge-Version: 0.1
+Compatible-Versions: []
+Cartridge-Vendor: redhat
+Website: http://aws.amazon.com/iam/
+
+Categories:
+  - embedded
+  - plugin
+
+Provides:
+  - aws-account
+  - aws-account-0.1
+
+Publishes:
+  publish-aws-credentials:
+    Type: ENV:NET_TCP:aws:credentials
+
+Cart-Data:
+- Key: secret_access_key
+  Type: cart_data
+  Description: Secret Access Key
+- Key: access_key_id
+  Type: cart_data
+  Description: Access Key ID
+- Key: user_id
+  Type: cart_data
+  Description: IAM User ID
+- Key: username
+  Type: cart_data
+  Description: IAM Username
+
+Scaling:
+  Min: 1
+  Max: 1
+  Multiplier: -1
+
+Group-Overrides:
+- components:
+  - web_framework
+  - aws-account

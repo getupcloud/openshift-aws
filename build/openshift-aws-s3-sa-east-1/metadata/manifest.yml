@@ -1,0 +1,59 @@
+Name: aws-s3-sa-east-1
+Cartridge-Short-Name: AWS_S3_SA_EAST_1
+Display-Name: AWS S3 Bucket - BR/São Paulo
+Description: "Este cartucho prove um Bucket S3 na regiao BR/São Paulo.
+ Voce recebera os dados do bucket em variaveis de ambiente dentro de sua aplicacao.
+ Este cartucho precisa do cartucho 'AWS Base' para funcionar.
+ Consulte o website do cartucho em https://getupcloud.com/tecnologia/aws-s3 para informacoes sobre preco e metodo de cobranca."
+Version: '0.1'
+Versions: [ '0.1' ]
+License: Apache License version 2.0
+License-Url: http://www.apache.org/licenses/LICENSE-2.0.html
+Vendor: The Apache Software Foundation
+Cartridge-Version: 0.1
+Compatible-Versions: []
+Cartridge-Vendor: redhat
+Website: https://getupcloud.com/tecnologia/aws-s3
+
+Usage-Rates:
+  - usd: 1
+
+Categories:
+  - embedded
+  - plugin
+
+Provides:
+  - aws-s3
+  - aws-s3-sa-east-1
+
+Requires:
+  - aws-account
+
+Configure-Order:
+  - aws-account
+  - aws-s3
+
+Publishes:
+  publish-aws-vars:
+    Type: ENV:NET_TCP:aws:vars
+
+Cart-Data:
+- Key: bucket_name
+  Type: cart_data
+  Description: Bucket name
+- Key: region
+  Type: cart_data
+  Description: Region
+- Key: endpoint
+  Type: cart_data
+  Description: Endpoint
+
+Scaling:
+  Min: 1
+  Max: 1
+  Multiplier: -1
+
+Group-Overrides:
+- components:
+  - aws-account
+  - aws-s3
