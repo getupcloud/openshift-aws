@@ -33,3 +33,6 @@ Provides AWS account support to applications
 %doc %{cartridgedir}/LICENSE
 
 %changelog
+* Tue Jan 06 2015 Builder <getup@getupcloud.com> 0.0.1-2
+- Build (getup@getupcloud.com)
+
