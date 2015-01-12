@@ -3,7 +3,7 @@
 Summary:       Provides AWS S3 bucket support to applications
 Name:          openshift-origin-cartridge-aws-s3-sa-east-1
 Version:       0.0.1
-Release:       2%{?dist}
+Release:       0%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -33,6 +33,3 @@ Provides AWS S3 bucket support to applications
 %doc %{cartridgedir}/LICENSE
 
 %changelog
-* Tue Jan 06 2015 Builder <getup@getupcloud.com> 0.0.1-2
-- Build (getup@getupcloud.com)
-
